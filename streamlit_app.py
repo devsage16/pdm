@@ -252,7 +252,9 @@ st.markdown(f"#### Using {'uploaded data' if data_source == 'Uploaded' else 'sam
 
 # Time Series Overview
 st.header("Time Series Analysis")
-
+with st.expander("Sensor Data Over Time", expanded=True):
+    time_series_tab1, time_series_tab2, time_series_tab3 = st.tabs(["Velocity Parameters", "Acceleration Parameters", "Temperature"])
+    
 with time_series_tab1:
     # Create bar chart for velocity parameters
     fig_vel = go.Figure()
