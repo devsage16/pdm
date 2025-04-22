@@ -253,81 +253,76 @@ st.markdown(f"#### Using {'uploaded data' if data_source == 'Uploaded' else 'sam
 # Time Series Overview
 st.header("Time Series Analysis")
 
-with st.expander("Sensor Data Over Time", expanded=True):
-    time_series_tab1, time_series_tab2, time_series_tab3 = st.tabs(["Velocity Parameters", "Acceleration Parameters", "Temperature"])
-    
-    with time_series_tab1:
-        # Create time series plot for velocity parameters
-        fig_vel = go.Figure()
-        
-        # Add RMS velocity data
-        fig_vel.add_trace(go.Scatter(
-            x=df['timestamp'],
-            y=df['x_rms_vel'],
-            mode='lines',
-            name='X-RMS Velocity',
-            line=dict(color='blue')
-        ))
-        
-        fig_vel.add_trace(go.Scatter(
-            x=df['timestamp'],
-            y=df['z_rms_vel'],
-            mode='lines',
-            name='Z-RMS Velocity',
-            line=dict(color='green')
-        ))
-        
-        # Add peak velocity data
-        fig_vel.add_trace(go.Scatter(
-            x=df['timestamp'],
-            y=df['x_peak_vel'],
-            mode='lines',
-            name='X-Peak Velocity',
-            line=dict(color='blue', dash='dash')
-        ))
-        
-        fig_vel.add_trace(go.Scatter(
-            x=df['timestamp'],
-            y=df['z_peak_vel'],
-            mode='lines',
-            name='Z-Peak Velocity',
-            line=dict(color='green', dash='dash')
-        ))
-        
-        # Add threshold lines
-        fig_vel.add_shape(
-            type="line",
-            x0=df['timestamp'].min(),
-            y0=thresholds['x_rms_vel'],
-            x1=df['timestamp'].max(),
-            y1=thresholds['x_rms_vel'],
-            line=dict(color="blue", width=1, dash="dot"),
+with time_series_tab1:
+    # Create bar chart for velocity parameters
+    fig_vel = go.Figure()
+
+    # Add RMS velocity data as bars
+    fig_vel.add_trace(go.Bar(
+        x=df['timestamp'],
+        y=df['x_rms_vel'],
+        name='X-RMS Velocity',
+        marker=dict(color='blue')
+    ))
+
+    fig_vel.add_trace(go.Bar(
+        x=df['timestamp'],
+        y=df['z_rms_vel'],
+        name='Z-RMS Velocity',
+        marker=dict(color='green')
+    ))
+
+    # Add peak velocity data as bars (optional — using opacity for dashed-line effect)
+    fig_vel.add_trace(go.Bar(
+        x=df['timestamp'],
+        y=df['x_peak_vel'],
+        name='X-Peak Velocity',
+        marker=dict(color='blue', opacity=0.4)
+    ))
+
+    fig_vel.add_trace(go.Bar(
+        x=df['timestamp'],
+        y=df['z_peak_vel'],
+        name='Z-Peak Velocity',
+        marker=dict(color='green', opacity=0.4)
+    ))
+
+    # Add threshold lines
+    fig_vel.add_shape(
+        type="line",
+        x0=df['timestamp'].min(),
+        y0=thresholds['x_rms_vel'],
+        x1=df['timestamp'].max(),
+        y1=thresholds['x_rms_vel'],
+        line=dict(color="blue", width=1, dash="dot"),
+    )
+
+    fig_vel.add_shape(
+        type="line",
+        x0=df['timestamp'].min(),
+        y0=thresholds['z_rms_vel'],
+        x1=df['timestamp'].max(),
+        y1=thresholds['z_rms_vel'],
+        line=dict(color="green", width=1, dash="dot"),
+    )
+
+    fig_vel.update_layout(
+        title="Machine Velocity Parameters Over Time (Bar Chart)",
+        xaxis_title="Date",
+        yaxis_title="Velocity (mm/s)",
+        hovermode="x unified",
+        barmode='group',  # Grouped bars for comparison
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
         )
-        
-        fig_vel.add_shape(
-            type="line",
-            x0=df['timestamp'].min(),
-            y0=thresholds['z_rms_vel'],
-            x1=df['timestamp'].max(),
-            y1=thresholds['z_rms_vel'],
-            line=dict(color="green", width=1, dash="dot"),
-        )
-        
-        fig_vel.update_layout(
-            title="Machine Velocity Parameters Over Time",
-            xaxis_title="Date",
-            yaxis_title="Velocity (mm/s)",
-            hovermode="x unified",
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
-            )
-        )
-        
-        st.plotly_chart(fig_vel, use_container_width=True)
+    )
+
+    st.plotly_chart(fig_vel, use_container_width=True)
+
         
     with time_series_tab2:
         # Create time series plot for acceleration parameters
